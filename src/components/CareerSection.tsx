@@ -357,7 +357,7 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                 />
 
                 {/* Invisible Interaction Layer for Mobile/Desktop to catch events that the iframe swallows */}
-                <div 
+                <div
                   className="absolute inset-0 z-20 cursor-pointer"
                   style={{ bottom: "60px" }} // Leave the bottom area (playing bar) interactive for the native player
                   onClick={(e) => {
@@ -373,10 +373,10 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
               {/* Mute Button (Animate opacity instead of removing from DOM for stability) */}
               <motion.button
                 initial={{ opacity: 0, y: 10 }}
-                animate={{ 
-                  opacity: showControls ? 1 : 0, 
+                animate={{
+                  opacity: showControls ? 1 : 0,
                   y: showControls ? 0 : 10,
-                  pointerEvents: showControls ? "auto" : "none" 
+                  pointerEvents: showControls ? "auto" : "none"
                 }}
                 transition={{ duration: 0.3 }}
                 whileHover={{ scale: 1.1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}
@@ -410,17 +410,17 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
               {/* Close Button (Animate opacity instead of removing from DOM) */}
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ 
-                  opacity: showControls ? 1 : 0, 
+                animate={{
+                  opacity: showControls ? 1 : 0,
                   scale: showControls ? 1 : 0.8,
-                  pointerEvents: showControls ? "auto" : "none" 
+                  pointerEvents: showControls ? "auto" : "none"
                 }}
                 transition={{ duration: 0.3 }}
                 onClick={(e) => {
                   e.stopPropagation();
                   setMaximizedProject(null);
                 }}
-                className="absolute top-6 right-6 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 hover:bg-primary hover:border-primary transition-all group active:scale-95 backdrop-blur-md"
+                className="absolute top-6 right-11 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 hover:bg-primary hover:border-primary transition-all group active:scale-95 backdrop-blur-md"
               >
                 <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
               </motion.button>
