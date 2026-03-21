@@ -90,7 +90,7 @@ const FallingWord = ({ word, delay, className, isInView, intenseDust = false }: 
   }, [isInView]);
 
   return (
-    <div className="relative inline-block px-10">
+    <div className="relative inline-block px-12 md:px-10">
       <motion.span
         initial={{ y: -600, opacity: 0, scaleY: 1.5 }}
         animate={isInView ? {
@@ -223,7 +223,7 @@ const LeaningMan = ({ isInView }: { isInView: boolean }) => {
           times: [0, 0.1, 0.15, 0.85, 1],
           ease: "easeInOut"
         }}
-        className="absolute -top-5 -right-9 bg-secondary text-black text-[13px] font-bold px-2 py-1 tracking-tight rounded-2xl rounded-bl-none shadow-[0_0_15px_rgba(var(--primary),0.4)] origin-bottom-left"
+        className="absolute -top-10 md:-top-5 -left-10 md:left-auto md:-right-9 bg-secondary text-black text-[11px] md:text-[13px] font-bold px-2 py-1 tracking-tight rounded-2xl rounded-br-none md:rounded-br-2xl md:rounded-bl-none shadow-[0_0_15px_rgba(var(--primary),0.4)] origin-bottom-right md:origin-bottom-left"
       >
         Hello !
       </motion.div>

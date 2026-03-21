@@ -89,7 +89,7 @@ const Index = ({ isVideoOpen, setIsVideoOpen }: IndexProps) => {
             </Suspense>
           </div>
         </AnimatePresence>
-        <BackToTop />
+        <BackToTop isHidden={isVideoOpen} />
       </div>
     </SmoothScroll>
   );

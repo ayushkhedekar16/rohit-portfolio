@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 
-const BackToTop = () => {
+interface BackToTopProps {
+    isHidden?: boolean;
+}
+
+const BackToTop = ({ isHidden = false }: BackToTopProps) => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -27,7 +31,7 @@ const BackToTop = () => {
 
     return (
         <AnimatePresence>
-            {isVisible && (
+            {isVisible && !isHidden && (
                 <motion.button
                     initial={{ opacity: 0, scale: 0.5, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
