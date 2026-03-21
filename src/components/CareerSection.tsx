@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, X, Volume2 } from "lucide-react";
+import { Play, X, Volume2, VolumeOff } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactPlayer from "react-player";
 
@@ -120,39 +120,6 @@ const projects = [
   },
 ];
 
-const UnmuteWarning = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 600);
-    const hideTimer = setTimeout(() => setIsVisible(false), 4500);
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(hideTimer);
-    };
-  }, []);
-
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          className="absolute bottom-16 right-6 md:bottom-12 md:right-3 z-[110] bg-black/60 backdrop-blur-xl border border-primary/40 px-5 py-2.5 rounded-full pointer-events-none flex items-center gap-3 shadow-[0_0_30px_rgba(var(--primary),0.2)]"
-        >
-          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-            <Volume2 size={14} className="text-primary animate-pulse" />
-          </div>
-          <span className="text-[10px] md:text-xs text-white font-bold tracking-[0.15em] uppercase whitespace-nowrap">
-            Unmute for Audio
-          </span>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
 interface CareerSectionProps {
   onModalToggle?: (isOpen: boolean) => void;
 }
@@ -169,16 +136,33 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
 
   // Handle modal play state to prevent "stuck on loading" on mobile
   const [modalVideoPlaying, setModalVideoPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const resetControlsTimer = () => {
+    setShowControls(true);
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => {
+      setShowControls(false);
+    }, 3000); // Hide after 3 seconds of idle
+  };
 
   useEffect(() => {
     if (maximizedProject !== null) {
+      resetControlsTimer();
       // Small delay to ensure modal is mounted and avoid interaction bit expiry issues
       const timer = setTimeout(() => {
         setModalVideoPlaying(true);
       }, 400);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+      };
     } else {
       setModalVideoPlaying(false);
+      setIsMuted(false); // Reset mute state when closing modal
+      setShowControls(true);
     }
   }, [maximizedProject]);
 
@@ -334,7 +318,12 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className={`relative ${projects[maximizedProject].isVertical ? 'h-[90vh] aspect-[9/16]' : 'w-full max-w-6xl aspect-video'} bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(48,217,237,0.2)]`}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                resetControlsTimer();
+              }}
+              onMouseMove={resetControlsTimer}
+              onTouchStart={resetControlsTimer}
             >
               <div className="w-full h-full">
                 <ReactPlayer
@@ -342,7 +331,7 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                   playing={modalVideoPlaying}
                   controls={true}
                   playsInline={true}
-                  muted={false} // Allow audio in modal since it's user-initiated
+                  muted={isMuted}
                   width="100%"
                   height="100%"
                   style={{ borderRadius: '1.5rem', overflow: 'hidden' }}
@@ -360,16 +349,60 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                 />
               </div>
 
-              {/* Unmute Warning - Self-contained to avoid parent re-renders */}
-              <UnmuteWarning key={`warning-${maximizedProject}`} />
+              {/* Mute Button (Fades on idle) */}
+              <AnimatePresence>
+                {showControls && (
+                  <motion.button
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    whileHover={{ scale: 1.1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsMuted(!isMuted);
+                      resetControlsTimer();
+                    }}
+                    className="absolute bottom-12 md:bottom-12 right-3 z-30 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 backdrop-blur-xl shadow-2xl transition-colors duration-300 group"
+                    style={{ width: '30px', height: '30px' }}
+                    title={isMuted ? "Unmute" : "Mute"}
+                  >
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={isMuted ? 'muted' : 'unmuted'}
+                        initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
+                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                        exit={{ scale: 0.5, opacity: 0, rotate: 10 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                      >
+                        {isMuted ? (
+                          <VolumeOff className="w-5 h-5 text-red-400 group-hover:text-red-300 drop-shadow-[0_0_8px_rgba(248,113,113,0.4)]" />
+                        ) : (
+                          <Volume2 className="w-5 h-5 text-primary group-hover:text-primary-foreground drop-shadow-[0_0_8px_rgba(var(--primary),0.4)]" />
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
+                  </motion.button>
+                )}
+              </AnimatePresence>
 
-              {/* Close Button */}
-              <button
-                onClick={() => setMaximizedProject(null)}
-                className="absolute top-6 right-6 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 hover:bg-primary hover:border-primary transition-all group active:scale-95 backdrop-blur-md"
-              >
-                <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
-              </button>
+              {/* Close Button (Fades on idle) */}
+              <AnimatePresence>
+                {showControls && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMaximizedProject(null);
+                    }}
+                    className="absolute top-6 right-6 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 hover:bg-primary hover:border-primary transition-all group active:scale-95 backdrop-blur-md"
+                  >
+                    <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
 
               {/* Mobile Swipe-down indicator */}
               <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-white/20 md:hidden" />
