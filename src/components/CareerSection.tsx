@@ -138,7 +138,13 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
   const [modalVideoPlaying, setModalVideoPlaying] = useState(false);
 
   useEffect(() => {
-    if (maximizedProject === null) {
+    if (maximizedProject !== null) {
+      // Small delay to ensure modal is mounted and avoid interaction bit expiry issues
+      const timer = setTimeout(() => {
+        setModalVideoPlaying(true);
+      }, 400);
+      return () => clearTimeout(timer);
+    } else {
       setModalVideoPlaying(false);
     }
   }, [maximizedProject]);
@@ -183,7 +189,6 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
               className="group relative rounded-2xl overflow-hidden border-glow bg-card/30 hover-glow flex flex-col cursor-pointer"
               onClick={() => {
                 setMaximizedProject(i);
-                setModalVideoPlaying(true); // Trigger play immediately in the click handler to preserve interaction context
                 setHoveredIndex(null); // Clear hover on click for mobile
               }}
               onMouseEnter={() => {
@@ -304,7 +309,7 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                   playing={modalVideoPlaying}
                   controls={true}
                   playsInline={true}
-                  muted={false} // Request unmuted playback
+                  muted={false} // Allow audio in modal since it's user-initiated
                   width="100%"
                   height="100%"
                   style={{ borderRadius: '1.5rem', overflow: 'hidden' }}
@@ -316,15 +321,10 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                     }
                   }}
                   onReady={() => {
-                    // Re-assert play state once ready
+                    // Force play again on ready if needed
                     if (modalVideoPlaying) setModalVideoPlaying(true);
                   }}
                 />
-              </div>
-
-              {/* Mobile Tip for Sound */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-none md:hidden text-[10px] text-white/40 font-accent uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">
-                Tap player to unmute if silent
               </div>
 
               {/* Close Button */}
