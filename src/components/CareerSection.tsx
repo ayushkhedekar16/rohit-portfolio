@@ -343,66 +343,68 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                     }
                   }}
                   onReady={() => {
-                    // Force play again on ready if needed
                     if (modalVideoPlaying) setModalVideoPlaying(true);
                   }}
+                  onPlay={resetControlsTimer}
+                  onPause={resetControlsTimer}
+                  onStart={resetControlsTimer}
                 />
               </div>
 
-              {/* Mute Button (Fades on idle) */}
-              <AnimatePresence>
-                {showControls && (
-                  <motion.button
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    whileHover={{ scale: 1.1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsMuted(!isMuted);
-                      resetControlsTimer();
-                    }}
-                    className="absolute bottom-12 md:bottom-12 right-3 z-30 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 backdrop-blur-xl shadow-2xl transition-colors duration-300 group"
-                    style={{ width: '30px', height: '30px' }}
-                    title={isMuted ? "Unmute" : "Mute"}
+              {/* Mute Button (Animate opacity instead of removing from DOM for stability) */}
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ 
+                  opacity: showControls ? 1 : 0, 
+                  y: showControls ? 0 : 10,
+                  pointerEvents: showControls ? "auto" : "none" 
+                }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.1, backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+                whileTap={{ scale: 0.9 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMuted(!isMuted);
+                  resetControlsTimer();
+                }}
+                className="absolute bottom-12 md:bottom-12 right-3 z-30 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 backdrop-blur-xl shadow-2xl group transition-colors duration-300"
+                style={{ width: '30px', height: '30px' }}
+                title={isMuted ? "Unmute" : "Mute"}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={isMuted ? 'muted' : 'unmuted'}
+                    initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                    exit={{ scale: 0.5, opacity: 0, rotate: 10 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
                   >
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={isMuted ? 'muted' : 'unmuted'}
-                        initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
-                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                        exit={{ scale: 0.5, opacity: 0, rotate: 10 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                      >
-                        {isMuted ? (
-                          <VolumeOff className="w-5 h-5 text-red-400 group-hover:text-red-300 drop-shadow-[0_0_8px_rgba(248,113,113,0.4)]" />
-                        ) : (
-                          <Volume2 className="w-5 h-5 text-primary group-hover:text-primary-foreground drop-shadow-[0_0_8px_rgba(var(--primary),0.4)]" />
-                        )}
-                      </motion.div>
-                    </AnimatePresence>
-                  </motion.button>
-                )}
-              </AnimatePresence>
+                    {isMuted ? (
+                      <VolumeOff className="w-5 h-5 text-red-400 group-hover:text-red-300 drop-shadow-[0_0_8px_rgba(248,113,113,0.4)]" />
+                    ) : (
+                      <Volume2 className="w-5 h-5 text-primary group-hover:text-primary-foreground drop-shadow-[0_0_8px_rgba(var(--primary),0.4)]" />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </motion.button>
 
-              {/* Close Button (Fades on idle) */}
-              <AnimatePresence>
-                {showControls && (
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setMaximizedProject(null);
-                    }}
-                    className="absolute top-6 right-6 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 hover:bg-primary hover:border-primary transition-all group active:scale-95 backdrop-blur-md"
-                  >
-                    <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
-                  </motion.button>
-                )}
-              </AnimatePresence>
+              {/* Close Button (Animate opacity instead of removing from DOM) */}
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ 
+                  opacity: showControls ? 1 : 0, 
+                  scale: showControls ? 1 : 0.8,
+                  pointerEvents: showControls ? "auto" : "none" 
+                }}
+                transition={{ duration: 0.3 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMaximizedProject(null);
+                }}
+                className="absolute top-6 right-6 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 hover:bg-primary hover:border-primary transition-all group active:scale-95 backdrop-blur-md"
+              >
+                <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+              </motion.button>
 
               {/* Mobile Swipe-down indicator */}
               <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-white/20 md:hidden" />
