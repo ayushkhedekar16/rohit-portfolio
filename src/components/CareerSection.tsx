@@ -134,6 +134,21 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
     }
   }, [maximizedProject, onModalToggle]);
 
+  // Handle modal play state to prevent "stuck on loading" on mobile
+  const [modalVideoPlaying, setModalVideoPlaying] = useState(false);
+
+  useEffect(() => {
+    if (maximizedProject !== null) {
+      // Small delay to ensure modal is mounted and avoid interaction bit expiry issues
+      const timer = setTimeout(() => {
+        setModalVideoPlaying(true);
+      }, 400);
+      return () => clearTimeout(timer);
+    } else {
+      setModalVideoPlaying(false);
+    }
+  }, [maximizedProject]);
+
   // Helper to extract Vimeo ID and thumbnail
   const getVimeoThumbnail = (url: string) => {
     const match = url.match(/vimeo\.com\/(\d+)/);
@@ -172,8 +187,13 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ delay: i * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="group relative rounded-2xl overflow-hidden border-glow bg-card/30 hover-glow flex flex-col cursor-pointer"
-              onClick={() => setMaximizedProject(i)}
-              onMouseEnter={() => setHoveredIndex(i)}
+              onClick={() => {
+                setMaximizedProject(i);
+                setHoveredIndex(null); // Clear hover on click for mobile
+              }}
+              onMouseEnter={() => {
+                if (maximizedProject === null) setHoveredIndex(i);
+              }}
               onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Video embed area */}
@@ -286,16 +306,23 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
               <div className="w-full h-full">
                 <ReactPlayer
                   src={projects[maximizedProject].video}
-                  playing={true}
+                  playing={modalVideoPlaying}
                   controls={true}
                   playsInline={true}
+                  muted={false} // Allow audio in modal since it's user-initiated
                   width="100%"
                   height="100%"
+                  style={{ borderRadius: '1.5rem', overflow: 'hidden' }}
                   config={{
                     vimeo: {
+                      autopause: false,
                       dnt: true,
                       color: "30D9ED",
                     }
+                  }}
+                  onReady={() => {
+                    // Force play again on ready if needed
+                    if (modalVideoPlaying) setModalVideoPlaying(true);
                   }}
                 />
               </div>
