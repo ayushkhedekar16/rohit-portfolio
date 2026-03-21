@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Volume2, VolumeOff } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import ReactPlayer from "react-player";
 
 const projects = [
@@ -140,13 +140,30 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
   const [showControls, setShowControls] = useState(true);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const resetControlsTimer = () => {
+  const resetControlsTimer = useCallback(() => {
     setShowControls(true);
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => {
       setShowControls(false);
     }, 3000); // Hide after 3 seconds of idle
-  };
+  }, []);
+
+  // Listen for clicks inside the iframe (Vimeo)
+  useEffect(() => {
+    const handleWindowBlur = () => {
+      // Small delay to check for activeElement since it updates after the blur event
+      setTimeout(() => {
+        if (document.activeElement?.tagName === "IFRAME") {
+          resetControlsTimer();
+          // Immediately refocus the window to detect future clicks
+          window.focus();
+        }
+      }, 100);
+    };
+
+    window.addEventListener("blur", handleWindowBlur);
+    return () => window.removeEventListener("blur", handleWindowBlur);
+  }, [resetControlsTimer]);
 
   useEffect(() => {
     if (maximizedProject !== null) {
@@ -318,9 +335,12 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className={`relative ${projects[maximizedProject].isVertical ? 'h-[90vh] aspect-[9/16]' : 'w-full max-w-6xl aspect-video'} bg-black rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(48,217,237,0.2)]`}
-              onMouseMoveCapture={resetControlsTimer}
-              onClickCapture={resetControlsTimer}
-              onTouchStartCapture={resetControlsTimer}
+              onClick={(e) => {
+                e.stopPropagation();
+                resetControlsTimer();
+              }}
+              onMouseMove={resetControlsTimer}
+              onTouchStart={resetControlsTimer}
             >
               <div className="w-full h-full">
                 <ReactPlayer
