@@ -76,10 +76,6 @@
     @apply font-display;
   }
 
-  ::selection {
-    background: hsl(185 80% 55% / 0.3);
-    color: hsl(0 0% 95%);
-  }
 
   ::-webkit-scrollbar {
     width: 6px;

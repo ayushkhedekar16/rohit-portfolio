@@ -64,15 +64,15 @@ const CustomCursor = ({ isVideoOpen }: CustomCursorProps) => {
 
             {/* Main cursor dot - fast and snappy */}
             <motion.div
-                className={`fixed top-0 left-0 rounded-full pointer-events-none z-[9999] hidden md:flex items-center justify-center ${isVideoOpen ? 'bg-primary/80 border border-white/20 shadow-lg' : 'bg-white mix-blend-difference'
+                className={`fixed top-0 left-0 rounded-full pointer-events-none z-[9999] hidden md:flex items-center justify-center border ${isVideoOpen ? 'bg-primary/80 border-white/20 shadow-lg' : 'bg-transparent border-primary/50'
                     }`}
                 style={{
                     x: springX,
                     y: springY,
                     translateX: "-50%",
                     translateY: "-50%",
-                    width: isHovering ? 80 : 12,
-                    height: isHovering ? 80 : 12,
+                    width: isHovering ? 60 : 12,
+                    height: isHovering ? 60 : 12,
                 }}
                 transition={{
                     width: { type: "spring", stiffness: 300, damping: 20 },

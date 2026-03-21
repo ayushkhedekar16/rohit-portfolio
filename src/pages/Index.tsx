@@ -38,7 +38,7 @@ const Index = ({ isVideoOpen, setIsVideoOpen }: IndexProps) => {
 
   return (
     <SmoothScroll>
-      <div ref={containerRef} className="min-h-screen bg-background/90 text-foreground overflow-x-hidden relative selection:bg-primary/30">
+      <div ref={containerRef} className="min-h-screen bg-background/90 text-foreground overflow-x-hidden relative">
         <AnimatePresence>
           {/* Fixed Background Layer */}
           <div className="fixed inset-0 z-0 pointer-events-none">

@@ -18,11 +18,11 @@ const PixelParticle = ({ x, y, delay, color }: { x: number; y: number; delay: nu
       scale: 0,
     }}
     transition={{
-      duration: 0.8,
+      duration: 0.6,
       delay,
       ease: "easeOut"
     }}
-    className="absolute w-1 h-1"
+    className="absolute w-1 h-1 will-change-transform"
     style={{ left: "50%", top: "100%", backgroundColor: color }}
   />
 );
@@ -30,10 +30,10 @@ const PixelParticle = ({ x, y, delay, color }: { x: number; y: number; delay: nu
 const EchoPulse = ({ word, className, color }: { word: string; className?: string; color: string }) => (
   <motion.span
     initial={{ scale: 1, opacity: 0.5 }}
-    animate={{ scale: 1.5, opacity: 0 }}
-    transition={{ duration: 0.8, ease: "easeOut" }}
-    className={`absolute inset-0 pointer-events-none ${className}`}
-    style={{ color, filter: "blur(2px)" }}
+    animate={{ scale: 1.4, opacity: 0 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+    className={`absolute inset-0 pointer-events-none ${className} will-change-transform`}
+    style={{ color }}
   >
     {word}
   </motion.span>
@@ -55,21 +55,21 @@ const GhostImpact = ({ word, className, isVisual = false }: { word: string; clas
       <motion.div
         initial={{ opacity: 0, width: 0 }}
         animate={{ opacity: [0, 0.8, 0], width: ["0%", "150%", "200%"] }}
-        transition={{ duration: 0.5 }}
-        className="absolute h-[1px] bg-gradient-to-r from-transparent via-white to-transparent"
+        transition={{ duration: 0.4 }}
+        className="absolute h-[1px] bg-gradient-to-r from-transparent via-white to-transparent will-change-[width,opacity]"
         style={{ top: "50%" }}
       />
 
       {/* Digital Pixel Scatter - Reduced count for performance */}
-      {Array.from({ length: 6 }).map((_, i) => {
-        const x = (Math.random() - 0.5) * 300;
+      {Array.from({ length: 3 }).map((_, i) => {
+        const x = (Math.random() - 0.5) * 200;
         const y = Math.random() * 20;
         return (
           <PixelParticle
             key={i}
             x={x}
             y={y}
-            delay={Math.random() * 0.1}
+            delay={Math.random() * 0.05}
             color={i % 2 === 0 ? color1 : color2}
           />
         );
@@ -92,31 +92,29 @@ const FallingWord = ({ word, delay, className, isInView, intenseDust = false }: 
   return (
     <div className="relative inline-block px-10">
       <motion.span
-        initial={{ y: -1000, opacity: 0, scaleY: 2, filter: "blur(20px)" }}
+        initial={{ y: -600, opacity: 0, scaleY: 1.5 }}
         animate={isInView ? {
           y: 0,
           opacity: 1,
           scaleY: 1,
-          filter: "blur(0px)",
         } : {
-          y: -1000,
+          y: -600,
           opacity: 0,
-          scaleY: 2,
-          filter: "blur(20px)"
+          scaleY: 1.5,
         }}
         transition={{
           type: "spring",
-          damping: 20,
-          stiffness: 120,
+          damping: 18,
+          stiffness: 150,
           delay: isInView ? delay : 0,
-          mass: 1
+          mass: 0.8
         }}
         onAnimationComplete={(definition) => {
           if ((definition as any).y === 0 && isInView) {
             setShowImpact(true);
           }
         }}
-        className={`block cursor-default select-none relative z-10 ${className}`}
+        className={`block cursor-default select-none relative z-10 will-change-transform ${className}`}
       >
         {word}
       </motion.span>
