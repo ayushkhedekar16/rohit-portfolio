@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, X } from "lucide-react";
+import { Play, X, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactPlayer from "react-player";
 
@@ -136,16 +136,28 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
 
   // Handle modal play state to prevent "stuck on loading" on mobile
   const [modalVideoPlaying, setModalVideoPlaying] = useState(false);
+  const [showUnmuteWarning, setShowUnmuteWarning] = useState(false);
 
   useEffect(() => {
     if (maximizedProject !== null) {
       // Small delay to ensure modal is mounted and avoid interaction bit expiry issues
       const timer = setTimeout(() => {
         setModalVideoPlaying(true);
+        setShowUnmuteWarning(true);
       }, 400);
-      return () => clearTimeout(timer);
+
+      // Hide warning after 4 seconds
+      const hideTimer = setTimeout(() => {
+        setShowUnmuteWarning(false);
+      }, 4500);
+
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(hideTimer);
+      };
     } else {
       setModalVideoPlaying(false);
+      setShowUnmuteWarning(false);
     }
   }, [maximizedProject]);
 
@@ -326,6 +338,25 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                   }}
                 />
               </div>
+
+              {/* Unmute Warning */}
+              <AnimatePresence>
+                {showUnmuteWarning && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="absolute bottom-16 right-6 md:bottom-12 md:right-3 z-[110] bg-black/60 backdrop-blur-xl border border-primary/40 px-5 py-2.5 rounded-full pointer-events-none flex items-center gap-3 shadow-[0_0_30px_rgba(var(--primary),0.2)]"
+                  >
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Volume2 size={14} className="text-primary animate-pulse" />
+                    </div>
+                    <span className="text-[10px] md:text-xs text-white font-bold tracking-[0.15em] uppercase whitespace-nowrap">
+                      Unmute for Audio
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Close Button */}
               <button
