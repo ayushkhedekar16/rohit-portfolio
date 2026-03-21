@@ -349,6 +349,24 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                   onPause={resetControlsTimer}
                   onStart={resetControlsTimer}
                 />
+
+                {/* Interaction Layer (for mobile) 
+                    This catches taps when controls are hidden to bring them back, 
+                    since the iframe swallows events.
+                */}
+                {!showControls && (
+                  <div 
+                    className="absolute inset-0 z-20 cursor-pointer" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      resetControlsTimer();
+                    }}
+                    onTouchStart={(e) => {
+                      e.stopPropagation();
+                      resetControlsTimer();
+                    }}
+                  />
+                )}
               </div>
 
               {/* Mute Button (Animate opacity instead of removing from DOM for stability) */}
