@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Volume2, VolumeOff } from "lucide-react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import ReactPlayer from "react-player";
 
 const projects = [
@@ -140,30 +140,13 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
   const [showControls, setShowControls] = useState(true);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const resetControlsTimer = useCallback(() => {
+  const resetControlsTimer = () => {
     setShowControls(true);
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => {
       setShowControls(false);
     }, 3000); // Hide after 3 seconds of idle
-  }, []);
-
-  // Listen for clicks inside the iframe (Vimeo)
-  useEffect(() => {
-    const handleWindowBlur = () => {
-      // Small delay to check for activeElement since it updates after the blur event
-      setTimeout(() => {
-        if (document.activeElement?.tagName === "IFRAME") {
-          resetControlsTimer();
-          // Immediately refocus the window to detect future clicks
-          window.focus();
-        }
-      }, 100);
-    };
-
-    window.addEventListener("blur", handleWindowBlur);
-    return () => window.removeEventListener("blur", handleWindowBlur);
-  }, [resetControlsTimer]);
+  };
 
   useEffect(() => {
     if (maximizedProject !== null) {
@@ -362,9 +345,28 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                   onReady={() => {
                     if (modalVideoPlaying) setModalVideoPlaying(true);
                   }}
-                  onPlay={resetControlsTimer}
-                  onPause={resetControlsTimer}
+                  onPlay={() => {
+                    setModalVideoPlaying(true);
+                    resetControlsTimer();
+                  }}
+                  onPause={() => {
+                    setModalVideoPlaying(false);
+                    resetControlsTimer();
+                  }}
                   onStart={resetControlsTimer}
+                />
+
+                {/* Invisible Interaction Layer for Mobile/Desktop to catch events that the iframe swallows */}
+                <div 
+                  className="absolute inset-0 z-20 cursor-pointer"
+                  style={{ bottom: "60px" }} // Leave the bottom area (playing bar) interactive for the native player
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalVideoPlaying(!modalVideoPlaying); // Toggle play/pause on center tap
+                    resetControlsTimer();
+                  }}
+                  onMouseMove={resetControlsTimer}
+                  onTouchStart={resetControlsTimer}
                 />
               </div>
 
