@@ -100,7 +100,7 @@ const AcademiaSection = () => {
                   )}
                 </div>
                 <h4 className="font-display font-semibold text-sm mt-2 leading-tight md:whitespace-nowrap">{item.title}</h4>
-                <p className="text-xs text-muted-foreground/100 mt-1 font-medium md:whitespace-nowrap">{item.institution}</p>
+                <p className="text-xs text-muted-foreground/100 mt-1 font-bold md:whitespace-nowrap">{item.institution}</p>
                 <p className="text-[10px] text-muted-foreground/80 mt-1 leading-relaxed max-w-[200px] md:mx-auto">
                   {item.description}
                 </p>

@@ -49,7 +49,7 @@ const AboutSection = () => {
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-2">
               Hello, <span className="text-gradient">I am Rohit Yadav</span>
             </h2>
-            <p className="text-muted-foreground text-lg md:text-xl leading-relaxed italic">
+            <p className="text-foreground/80 text-lg md:text-xl leading-relaxed italic">
               I am a dynamic Video Editor and Visual Artist with over two years of experience crafting high-impact content for digital and marketing platforms. My workflow combines industry-standard tools like Adobe Creative Suite with advanced AI technologies, including Runway, Google Veo, and Topaz Video AI, to deliver cinematic stories with precision and efficiency. I focus on transforming complex ideas into compelling narratives that resonate with audiences, balancing artistic vision with strategic engagement.
             </p>
           </motion.div>
@@ -76,11 +76,11 @@ const AboutSection = () => {
               className="h-full"
             >
               <div className="group p-6 rounded-xl border-glow bg-card/40 hover-glow cursor-default h-full flex flex-col">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors shrink-0">
                   <item.icon className="text-primary" size={22} />
                 </div>
-                <h3 className="font-display font-semibold text-lg mb-3">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed flex-grow">{item.desc}</p>
+                <h3 className="font-display font-bold text-lg">{item.title}</h3>
+                <p className="text-sm text-foreground/60 leading-relaxed flex-grow">{item.desc}</p>
               </div>
             </motion.div>
           ))}

@@ -285,7 +285,7 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
                 </h3>
 
                 <div className="space-y-4">
-                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed italic border-l-2 border-primary/30 pl-2 py-1">
+                  <p className="text-xs md:text-sm text-foreground/65 leading-relaxed italic border-l-2 border-primary/30 pl-2 py-1">
                     {project.description}
                   </p>
 

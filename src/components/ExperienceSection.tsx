@@ -61,14 +61,14 @@ const ExperienceSection = () => {
         </motion.div>
 
         {/* Horizontal timeline */}
-        <div className="relative pt-16 md:pt-20">
+        <div className="relative pt-16 md:pt-15">
           {/* Animated Horizontal Line - Desktop Only */}
           <motion.div
             initial={{ scaleX: 0, opacity: 0 }}
             whileInView={{ scaleX: 1, opacity: 1 }}
             viewport={{ once: false, amount: 0.5 }}
             transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="absolute top-[88px] md:top-[104px] left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent origin-left z-0 hidden md:block"
+            className="absolute top-[88px] md:top-[87px] left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent origin-left z-0 hidden md:block"
           />
 
           {/* Animated Vertical Line - Mobile Only */}
@@ -101,7 +101,7 @@ const ExperienceSection = () => {
                       exit={{ opacity: 0, y: 10, scale: 0.95, x: "-50%" }}
                       transition={{ duration: 0.2 }}
                       style={{ left: "50%" }}
-                      className="absolute bottom-full mb-6 w-[calc(100vw-3rem)] max-w-72 p-4 rounded-xl bg-card/95 backdrop-blur-md border border-primary/30 shadow-2xl z-20 pointer-events-none"
+                      className="absolute bottom-full mb-6   w-[calc(100vw-3rem)] max-w-72 p-4 rounded-xl bg-card/95 backdrop-blur-md border border-primary/30 shadow-2xl z-20 pointer-events-none"
                     >
                       <div className="text-left space-y-2">
                         <p className="text-[10px] font-bold text-primary mb-2 uppercase tracking-wider">Key Contributions:</p>
@@ -135,7 +135,7 @@ const ExperienceSection = () => {
                   <Building2 size={16} className="text-secondary" />
                 </div>
                 <h4 className="font-display font-semibold text-sm mt-2 leading-tight group-hover:text-primary transition-colors cursor-default md:whitespace-nowrap">{item.role}</h4>
-                <p className="text-xs text-muted-foreground/100 mt-1 font-medium">{item.company}</p>
+                <p className="text-xs text-muted-foreground/100 mt-1 font-bold">{item.company}</p>
                 <p className="text-[10px] text-muted-foreground/80 mt-1 leading-relaxed max-w-[250px] mx-auto">
                   {item.description}
                 </p>

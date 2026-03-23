@@ -28,7 +28,7 @@ const ContactSection = memo(() => {
   ];
 
   return (
-    <section id="contact" className="pt-24 pb-32 px-6 md:px-12 lg:px-20 relative overflow-hidden scroll-mt-20">
+    <section id="contact" className="pt-16 pb-32 px-6 md:px-12 lg:px-20 relative overflow-hidden scroll-mt-20">
       {/* Decorative Background Elements - Optimized with lower blur and opacity */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[80px] pointer-events-none -z-10 will-change-[filter]" />
       <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[60px] pointer-events-none -z-10 will-change-[filter]" />
@@ -125,7 +125,7 @@ const ContactSection = memo(() => {
 
                   <div className="w-full max-w-sm pt-1">
                     <div className="p-6 rounded-3xl bg-primary/5 border border-primary/10 space-y-4">
-                      <p className="text-sm italic text-muted-foreground leading-relaxed">
+                      <p className="text-sm italic text-foreground/80 leading-relaxed">
                         "Your creativity is the real special effect."
                       </p>
                       <div className="h-px w-20 bg-primary/30 mx-auto" />
