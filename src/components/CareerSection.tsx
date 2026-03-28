@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, X, Volume2, VolumeOff } from "lucide-react";
+import { Play, X, Volume2, VolumeOff, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactPlayer from "react-player";
 
@@ -14,14 +14,14 @@ const projects = [
     color: "primary",
   },
   {
-    title: "Awakening Journey",
+    title: "Real Estate Project Expo",
     category: "VIDEO EDITING",
     isVertical: true,
-    description: "A high-energy event teaser for a spiritual workshop and retreat series.",
-    keyRole: "Performed cinematic color grading on raw vlog-style footage and implemented fast-paced rhythmic editing to build emotional momentum and audience engagement.",
-    video: "https://vimeo.com/1174273539",
-    thumbnail: "/Portfolio_Video/Thumbnails/02.jpg",
-    color: "secondary",
+    description: "A festive promotional explainer for Brickfolio’s Global Property Expo 2025.",
+    keyRole: "Blended visuals seamlessly with dynamic edits, rhythmic pacing, and energetic audio to build momentum and drive strong audience engagement.",
+    video: "https://vimeo.com/1174273695",
+    thumbnail: "/Portfolio_Video/Thumbnails/06.jpg",
+    color: "accent",
   },
   {
     title: "Digital Card Ad",
@@ -52,14 +52,14 @@ const projects = [
     color: "secondary",
   },
   {
-    title: "Real Estate Project Expo",
+    title: "Awakening Journey",
     category: "VIDEO EDITING",
     isVertical: true,
-    description: "A festive promotional explainer for Brickfolio’s Global Property Expo 2025.",
-    keyRole: "Blended visuals seamlessly with dynamic edits, rhythmic pacing, and energetic audio to build momentum and drive strong audience engagement.",
-    video: "https://vimeo.com/1174273695",
-    thumbnail: "/Portfolio_Video/Thumbnails/06.jpg",
-    color: "accent",
+    description: "A high-energy event teaser for a spiritual workshop and retreat series.",
+    keyRole: "Performed cinematic color grading on raw vlog-style footage and implemented fast-paced rhythmic editing to build emotional momentum and audience engagement.",
+    video: "https://vimeo.com/1174273539",
+    thumbnail: "/Portfolio_Video/Thumbnails/02.jpg",
+    color: "secondary",
   },
   {
     title: "Indigestion Kit Product Ad",
@@ -71,14 +71,13 @@ const projects = [
     color: "primary",
   },
   {
-    title: "OhBeauty Promo",
+    title: "AI Mastery: Workshop Promo",
     category: "VIDEO EDITING",
-    isVertical: true,
-    description: "A social media short showcasing the brand’s mobile interface, key beauty categories, and discounts.",
-    keyRole: "Crafted a fast-paced vlog-style edit with dynamic overlays, smooth UI visuals, refined color grading, and balanced sound for an engaging promo.",
-    video: "https://vimeo.com/1174274502",
-    thumbnail: "/Portfolio_Video/Thumbnails/08.jpg",
-    color: "secondary",
+    description: "Fast-paced promo with Pritam Nagrale, showcasing AI in business to drive workshop sign-ups.",
+    keyRole: "Handled end-to-end editing with fast cuts, bold motion graphics, and polished visuals to elevate the overall impact.",
+    video: "https://vimeo.com/1174274573",
+    thumbnail: "/Portfolio_Video/Thumbnails/12.jpg",
+    color: "accent",
   },
   {
     title: "Logo Evolution: Debranding",
@@ -110,13 +109,14 @@ const projects = [
     color: "secondary",
   },
   {
-    title: "AI Mastery: Workshop Promo",
+    title: "OhBeauty Promo",
     category: "VIDEO EDITING",
-    description: "Fast-paced promo with Pritam Nagrale, showcasing AI in business to drive workshop sign-ups.",
-    keyRole: "Handled end-to-end editing with fast cuts, bold motion graphics, and polished visuals to elevate the overall impact.",
-    video: "https://vimeo.com/1174274573",
-    thumbnail: "/Portfolio_Video/Thumbnails/12.jpg",
-    color: "accent",
+    isVertical: true,
+    description: "A social media short showcasing the brand’s mobile interface, key beauty categories, and discounts.",
+    keyRole: "Crafted a fast-paced vlog-style edit with dynamic overlays, smooth UI visuals, refined color grading, and balanced sound for an engaging promo.",
+    video: "https://vimeo.com/1174274502",
+    thumbnail: "/Portfolio_Video/Thumbnails/08.jpg",
+    color: "secondary",
   },
 ];
 
@@ -127,6 +127,7 @@ interface CareerSectionProps {
 const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
   const [maximizedProject, setMaximizedProject] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     if (onModalToggle) {
@@ -195,110 +196,128 @@ const CareerSection = ({ onModalToggle }: CareerSectionProps) => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: i * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative rounded-2xl overflow-hidden border-glow bg-card/30 hover-glow flex flex-col cursor-pointer"
-              onClick={() => {
-                setMaximizedProject(i);
-                setHoveredIndex(null); // Clear hover on click for mobile
-              }}
-              onMouseEnter={() => {
-                if (maximizedProject === null) setHoveredIndex(i);
-              }}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              {/* Video embed area */}
-              <div className="aspect-video bg-muted/20 relative overflow-hidden group/video-card shrink-0">
-                {/* 
-                  PERFORMANCE OPTIMIZATION:
-                  - Show a static placeholder while not hovering to avoid loading 12 video connections/iframes.
-                  - For Vimeo, we'd ideally fetch a thumbnail from their API, but for now we'll use a local fallback or high-res image.
-                */}
-                <div className="absolute inset-0 z-0 bg-black/40 group-hover/video-card:bg-black/10 transition-colors duration-500" />
+        <div className="relative">
+          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-1000 ease-in-out ${!showAll ? 'max-h-[2150px] md:max-h-[1650px] lg:max-h-[1120px] overflow-hidden' : 'max-h-[10000px]'}`}>
+            {projects.map((project, i) => (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: i * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="group relative rounded-2xl overflow-hidden border-glow bg-card/30 hover-glow flex flex-col cursor-pointer"
+                onClick={() => {
+                  setMaximizedProject(i);
+                  setHoveredIndex(null); // Clear hover on click for mobile
+                }}
+                onMouseEnter={() => {
+                  if (maximizedProject === null) setHoveredIndex(i);
+                }}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                {/* Video embed area */}
+                <div className="aspect-video bg-muted/20 relative overflow-hidden group/video-card shrink-0">
+                  {/* 
+                    PERFORMANCE OPTIMIZATION:
+                    - Show a static placeholder while not hovering to avoid loading 12 video connections/iframes.
+                    - For Vimeo, we'd ideally fetch a thumbnail from their API, but for now we'll use a local fallback or high-res image.
+                  */}
+                  <div className="absolute inset-0 z-0 bg-black/40 group-hover/video-card:bg-black/10 transition-colors duration-500" />
 
-                {hoveredIndex === i ? (
-                  isVimeo(project.video) ? (
-                    <div className="absolute inset-0 w-full h-full pointer-events-none">
-                      <ReactPlayer
-                        src={project.video}
-                        playing={true}
-                        muted={true}
-                        loop={true}
-                        playsInline={true}
-                        width="100%"
-                        height="100%"
-                        style={{ position: 'absolute', top: 0, left: 0, objectFit: 'cover' }}
-                        config={{
-                          vimeo: {
-                            background: true,
-                            transparent: false,
-                            dnt: true,
-                          }
-                        }}
+                  {hoveredIndex === i ? (
+                    isVimeo(project.video) ? (
+                      <div className="absolute inset-0 w-full h-full pointer-events-none">
+                        <ReactPlayer
+                          src={project.video}
+                          playing={true}
+                          muted={true}
+                          loop={true}
+                          playsInline={true}
+                          width="100%"
+                          height="100%"
+                          style={{ position: 'absolute', top: 0, left: 0, objectFit: 'cover' }}
+                          config={{
+                            vimeo: {
+                              background: true,
+                              transparent: false,
+                              dnt: true,
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <video
+                        src={`${project.video}#t=0.5`}
+                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 blur-[0px] group-hover/video-card:blur-0 scale-100 group-hover/video-card:scale-105"
+                        preload="metadata"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
                       />
-                    </div>
+                    )
                   ) : (
-                    <video
-                      src={`${project.video}#t=0.5`}
-                      className="absolute inset-0 w-full h-full object-cover transition-all duration-700 blur-[0px] group-hover/video-card:blur-0 scale-100 group-hover/video-card:scale-105"
-                      preload="metadata"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
+                    // Static Thumbnail view (Fallback to metadata frame if no image)
+                    // Static Thumbnail view (Fallback to vumbnail for vimeo or local thumbnail)
+                    <img
+                      src={isVimeo(project.video) ? getVimeoThumbnail(project.video) : project.thumbnail}
+                      alt={project.title}
+                      className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale-[40%] group-hover/video-card:opacity-100 group-hover/video-card:grayscale-0 transition-all duration-700"
                     />
-                  )
-                ) : (
-                  // Static Thumbnail view (Fallback to metadata frame if no image)
-                  // Static Thumbnail view (Fallback to vumbnail for vimeo or local thumbnail)
-                  <img
-                    src={isVimeo(project.video) ? getVimeoThumbnail(project.video) : project.thumbnail}
-                    alt={project.title}
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale-[40%] group-hover/video-card:opacity-100 group-hover/video-card:grayscale-0 transition-all duration-700"
-                  />
-                )}
+                  )}
 
-                <div
-                  className="absolute inset-0 flex items-center justify-center cursor-pointer z-10 bg-gradient-to-t from-background/90 via-transparent to-transparent group-hover/video-card:from-background/40 transition-all duration-500"
-                >
-                  <div className="w-16 h-16 rounded-full border-2 border-primary/40 flex items-center justify-center group-hover/video-card:border-primary group-hover/video-card:bg-primary/10 group-hover/video-card:scale-110 transition-all duration-300 backdrop-blur-sm">
-                    <Play className="text-primary ml-1" size={28} />
+                  <div
+                    className="absolute inset-0 flex items-center justify-center cursor-pointer z-10 bg-gradient-to-t from-background/90 via-transparent to-transparent group-hover/video-card:from-background/40 transition-all duration-500"
+                  >
+                    <div className="w-16 h-16 rounded-full border-2 border-primary/40 flex items-center justify-center group-hover/video-card:border-primary group-hover/video-card:bg-primary/10 group-hover/video-card:scale-110 transition-all duration-300 backdrop-blur-sm">
+                      <Play className="text-primary ml-1" size={28} />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="p-6 md:p-5 flex-1 flex flex-col">
-                <div className="flex justify-between items-start mb-1">
-                  <span className={`text-[9px] tracking-[0.20em] text-${project.color} font-bold uppercase`}>
-                    {project.category}
-                  </span>
-                </div>
+                <div className="p-6 md:p-5 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-1">
+                    <span className={`text-[9px] tracking-[0.20em] text-${project.color} font-bold uppercase`}>
+                      {project.category}
+                    </span>
+                  </div>
 
-                <h3 className="font-display font-bold text-xl md:text-2xl mb-3 group-hover:text-primary transition-colors">
-                  {project.title}
-                </h3>
+                  <h3 className="font-display font-bold text-xl md:text-2xl mb-3 group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
 
-                <div className="space-y-4">
-                  <p className="text-xs md:text-sm text-foreground/65 leading-relaxed italic border-l-2 border-primary/30 pl-2 py-1">
-                    {project.description}
-                  </p>
-
-                  <div className="pt-4 border-t border-white/5">
-                    <p className="text-[11px] text-primary font-bold uppercase tracking-widest mb-1 opacity-80">Key Impact</p>
-                    <p className="text-xs md:text-[13px] text-foreground/90 leading-relaxed font-medium">
-                      {project.keyRole}
+                  <div className="space-y-4">
+                    <p className="text-xs md:text-sm text-foreground/65 leading-relaxed italic border-l-2 border-primary/30 pl-2 py-1">
+                      {project.description}
                     </p>
+
+                    <div className="pt-4 border-t border-white/5">
+                      <p className="text-[11px] text-primary font-bold uppercase tracking-widest mb-1 opacity-80">Key Impact</p>
+                      <p className="text-xs md:text-[13px] text-foreground/90 leading-relaxed font-medium">
+                        {project.keyRole}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
+
+          {!showAll && (
+            <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background via-background/90 to-transparent flex items-end justify-center pb-8 z-20 pointer-events-none">
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                onClick={() => setShowAll(true)}
+                className="pointer-events-auto group relative flex items-center gap-3 px-10 py-4 rounded-full bg-background/50 border border-primary/20 hover:border-primary/50 transition-all duration-500 overflow-hidden shadow-[0_0_20px_rgba(48,217,237,0.1)] hover:shadow-[0_0_30px_rgba(48,217,237,0.2)] backdrop-blur-md"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="relative text-primary font-display font-bold uppercase tracking-[0.2em] text-xs">Explore All Projects</span>
+                <ChevronDown className="relative text-primary group-hover:translate-y-1 transition-transform duration-300" size={18} />
+              </motion.button>
+            </div>
+          )}
         </div>
       </div>
 

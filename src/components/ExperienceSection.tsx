@@ -101,7 +101,7 @@ const ExperienceSection = () => {
                       exit={{ opacity: 0, y: 10, scale: 0.95, x: "-50%" }}
                       transition={{ duration: 0.2 }}
                       style={{ left: "50%" }}
-                      className="absolute bottom-full mb-6   w-[calc(100vw-3rem)] max-w-72 p-4 rounded-xl bg-card/95 backdrop-blur-md border border-primary/30 shadow-2xl z-20 pointer-events-none"
+                      className="absolute bottom-full mb-6 w-[calc(100vw-3rem)] max-w-72 p-4 rounded-xl bg-card/95 backdrop-blur-md border border-primary/30 shadow-2xl z-20 pointer-events-none"
                     >
                       <div className="text-left space-y-2">
                         <p className="text-[10px] font-bold text-primary mb-2 uppercase tracking-wider">Key Contributions:</p>
