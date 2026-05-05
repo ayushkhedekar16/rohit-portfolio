@@ -32,3 +32,6 @@ dist-ssr
 
 # Vercel
 .vercel
+
+# Large Media
+public/Portfolio_Video/
